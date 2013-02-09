@@ -91,3 +91,7 @@ group :development do
   gem 'binding_of_caller' # I tried adding this and got an occational crash
   gem 'pry-rails'
 end
+
+gem 'unicorn'
+gem 'capistrano'
+
