@@ -52,4 +52,9 @@ namespace :deploy do
     end
   end
   before "deploy", "deploy:check_revision"
+
+  task :migrate_and_seed_fu do
+    run("cd #{deploy_to}/current && bundle exec rake db:migrate RAILS_ENV=#{rails_env}")
+    run("cd #{deploy_to}/current && bundle exec rake db:seed_fu RAILS_ENV=#{rails_env}")
+  end
 end
