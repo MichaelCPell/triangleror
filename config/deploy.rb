@@ -29,6 +29,10 @@ namespace :deploy do
     end
   end
 
+  task :start_redis,   except: {no_release: true} do
+    run "redis-server"
+  end
+
   task :setup_config, roles: :app do
     sudo "ln -nfs #{current_path}/config/nginx.conf /etc/nginx/sites-enabled/#{application}"
     sudo "ln -nfs #{current_path}/config/unicorn_init.sh /etc/init.d/unicorn_#{application}"
@@ -57,4 +61,15 @@ namespace :deploy do
     run("cd #{deploy_to}/current && bundle exec rake db:migrate RAILS_ENV=#{rails_env}")
     run("cd #{deploy_to}/current && bundle exec rake db:seed_fu RAILS_ENV=#{rails_env}")
   end
+
 end
+
+desc "tail production log files" 
+task :tail_logs, :roles => :app do
+  run "tail -f #{shared_path}/log/production.log" do |channel, stream, data|
+    puts  # for an extra line break before the host name
+    puts "#{channel[:host]}: #{data}" 
+    break if stream == :err    
+  end
+end
+
