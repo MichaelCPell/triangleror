@@ -45,6 +45,7 @@ namespace :deploy do
 
   task :symlink_config, roles: :app do
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
+    run "ln -nfs #{shared_path}/config/other_credentials.yml #{release_path}/config/other_credentials.yml"
   end
   after "deploy:finalize_update", "deploy:symlink_config"
 
@@ -64,7 +65,7 @@ namespace :deploy do
   end
 
   task :start_sidekiq do
-    run(bundle exec sidekiq)
+    run("bundle exec sidekiq")
   end
 
 end
@@ -77,4 +78,22 @@ task :tail_logs, :roles => :app do
     break if stream == :err    
   end
 end
+
+desc "Remote console" 
+task :console, :roles => :app do
+  env = "production"
+  server = find_servers(:roles => [:app]).first
+  run_with_tty server, %W( ./script/rails console #{env} )
+end
+
+
+  namespace :rails do
+    desc "Open the rails console on one of the remote servers"
+    task :console, :roles => :app do
+      hostname = find_servers_for_task(current_task).first
+      exec "ssh -l #{user} #{hostname} -t 'source ~/.profile && #{current_path}/script/rails c #{rails_env}'"
+    end
+  end
+
+
 

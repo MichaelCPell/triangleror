@@ -8,3 +8,4 @@ module SimpleHandlebarsRails
 
   Sprockets.register_engine '.shbrs', SimpleHandlebarsTemplate
 end
+
