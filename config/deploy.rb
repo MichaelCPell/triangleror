@@ -64,7 +64,7 @@ namespace :deploy do
   end
 
   task :start_sidekiq do
-    run("cd #{deploy_to}/current && bundle exec sidekiq RAILS_ENV=#{rails_env}")
+      exec %{ssh deployer@208.68.38.93 -t "#{default_shell} -c 'cd #{current_path} && bundle exec sidekiq -e production'"}
   end
 
 end
