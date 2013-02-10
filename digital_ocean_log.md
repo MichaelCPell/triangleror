@@ -80,6 +80,8 @@ $ bundle install
 #When Running Bundle Install
 sudo apt-get install build-essential
 sudo apt-get install libxml2 libxml2-dev libxslt1-dev
+sudo apt-get install libffi-dev #did nothing
+gem install ffi
 
 
 ------
