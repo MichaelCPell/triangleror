@@ -1,5 +1,6 @@
 require "rvm/capistrano"
 require "bundler/capistrano"
+require "sidekiq/capistrano"
 # require "cap_tasks"
 
 server "208.68.38.93", :web, :app, :db, primary: true
@@ -16,6 +17,14 @@ set :branch, "master"
 
 set :rvm_ruby_string, 'ruby-1.9.3-p385'
 set :rvm_type, :system
+
+set :sidekiq_cmd, "bundle exec sidekiq"
+set :sidekiqctl_cmd, "bundle exec sidekiqctl"
+set :sidekiq_timeout, 10
+set :sidekiq_role, :app
+set :sidekiq_pid, "#{current_path}/tmp/pids/sidekiq.pid"
+set :sidekiq_processes, 1
+
 
 default_run_options[:pty] = true
 ssh_options[:forward_agent] = true
@@ -63,8 +72,8 @@ namespace :deploy do
     run("cd #{deploy_to}/current && bundle exec rake db:seed_fu RAILS_ENV=#{rails_env}")
   end
 
-  task :start_sidekiq do
-      exec %{ssh deployer@208.68.38.93 -t "#{default_shell} -c 'cd #{current_path} && bundle exec sidekiq -e production'"}
+  task :start_sidekiq,roles: :app, except: {no_release: true} do
+      run %{ssh deployer@208.68.38.93 -t "#{default_shell} -c 'cd #{current_path} && bundle exec sidekiq -e production'"}
   end
 
 end
