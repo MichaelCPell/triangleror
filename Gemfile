@@ -38,7 +38,6 @@ gem 'pbkdf2'
 gem 'pg'
 gem 'rails'
 gem 'rake'
-gem 'rb-inotify'
 gem 'redis'
 gem 'redis-rails'
 gem 'rest-client'
@@ -85,7 +84,7 @@ group :test, :development do
   gem 'jasminerice'
   gem 'mocha', require: false
   gem 'rb-fsevent'
-  gem 'rb-inotify', '~> 0.8.8', require: RUBY_PLATFORM.include?('linux') && 'rb-inotify'
+#  gem 'rb-inotify', '~> 0.8.8', require: RUBY_PLATFORM.include?('linux') && 'rb-inotify'
   gem 'rspec-rails'
   gem 'shoulda'
   gem 'simplecov', require: false
@@ -100,4 +99,4 @@ end
 
 gem 'unicorn'
 gem 'capistrano'
-
+gem 'rb-inotify', '~> 0.8.8', require: RUBY_PLATFORM.include?('linux') && 'rb-inotify'
