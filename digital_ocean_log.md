@@ -83,6 +83,7 @@ sudo apt-get install libxml2 libxml2-dev libxslt1-dev
 sudo apt-get install libffi-dev #did nothing
 gem install ffi
 sudo apt-get install libreadline-dev
+gem install rails
 
 
 ------

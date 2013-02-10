@@ -1,5 +1,6 @@
 require "rvm/capistrano"
 require "bundler/capistrano"
+# require "cap_tasks"
 
 server "208.68.38.93", :web, :app, :db, primary: true
 
@@ -79,19 +80,7 @@ end
 
 desc "Remote console" 
 task :console, :roles => :app do
-  env = "production"
-  server = find_servers(:roles => [:app]).first
-  run_with_tty server, %W( ./script/rails console #{env} )
+  exec %{ssh deployer@208.68.38.93 -t "#{default_shell} -c 'cd #{current_path} && bundle exec rails c #{rails_env}'"}
 end
-
-
-  namespace :rails do
-    desc "Open the rails console on one of the remote servers"
-    task :console, :roles => :app do
-      hostname = find_servers_for_task(current_task).first
-      exec "ssh -l #{user} #{hostname} -t 'source ~/.profile && #{current_path}/script/rails c #{rails_env}'"
-    end
-  end
-
 
 

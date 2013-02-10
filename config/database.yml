@@ -29,6 +29,7 @@ production:
   username: discourse
   host_names:
     - production.localhost
+  host: localhost
 
 #  host: localhost  Maye this will be necessary?
 
