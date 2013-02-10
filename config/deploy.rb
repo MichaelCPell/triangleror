@@ -38,6 +38,7 @@ namespace :deploy do
     sudo "ln -nfs #{current_path}/config/unicorn_init.sh /etc/init.d/unicorn_#{application}"
     run "mkdir -p #{shared_path}/config"
     put File.read("config/database.yml"), "#{shared_path}/config/database.yml"
+    put File.read("config/other_credentials.yml"), "#{shared_path}/config/other_credentials.yml"
     puts "Now edit the config files in #{shared_path}."
   end
   after "deploy:setup", "deploy:setup_config"
@@ -60,6 +61,10 @@ namespace :deploy do
   task :migrate_and_seed_fu do
     run("cd #{deploy_to}/current && bundle exec rake db:migrate RAILS_ENV=#{rails_env}")
     run("cd #{deploy_to}/current && bundle exec rake db:seed_fu RAILS_ENV=#{rails_env}")
+  end
+
+  task :start_sidekiq do
+    run(bundle exec sidekiq)
   end
 
 end
