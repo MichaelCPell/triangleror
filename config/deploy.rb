@@ -65,7 +65,7 @@ namespace :deploy do
   end
 
   task :start_sidekiq do
-    run("bundle exec sidekiq")
+    run("cd #{deploy_to}/current && bundle exec sidekiq RAILS_ENV=#{rails_env}")
   end
 
 end
